@@ -1,7 +1,7 @@
 # Temporal-and-Cross-Field-Robustness-of-Citation-Intent-with-Large-Language-Model
 
-This repository contains resources used in this paper titled **“Temporal and Cross-Field Robustness of
-Citation Intent with Large Language Model”** and provides the code and resources
+This repository accompanies the paper **“Temporal and Cross-Field Robustness of
+Citation Intent with Large Language Model”** and provides the resources
 necessary to reproduce the experimental results reported in the study.
 
 Specifically, this repository contains the implementation of the proposed
