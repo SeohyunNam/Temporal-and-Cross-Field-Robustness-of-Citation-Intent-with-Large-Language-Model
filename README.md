@@ -3,10 +3,7 @@
 This repository accompanies the paper **“LLM-Based Citation Intent Analytics: Longitudinal Evidence across 21 Scientific Fields”** and provides the resources
 necessary to reproduce the experimental results reported in the study.
 
-Specifically, this repository contains the implementation of the proposed
-citation intent modeling and evaluation pipeline, including temporal splitting,
-model training, and performance analysis across scientific fields. The datasets
-used in the experiments are archived separately on Zenodo to ensure long-term
+The datasets used in the experiments are archived separately on Zenodo to ensure long-term
 accessibility and reproducibility.
 
 ## Data Availability
