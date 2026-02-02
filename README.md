@@ -1,7 +1,6 @@
 # Temporal-and-Cross-Field-Robustness-of-Citation-Intent-with-Large-Language-Model
 
-This repository accompanies the paper **“Temporal and Cross-Field Robustness of
-Citation Intent with Large Language Model”** and provides the resources
+This repository accompanies the paper **“LLM-Based Citation Intent Analytics: Longitudinal Evidence across 21 Scientific Fields”** and provides the resources
 necessary to reproduce the experimental results reported in the study.
 
 Specifically, this repository contains the implementation of the proposed
