@@ -1,6 +1,6 @@
 # Temporal-and-Cross-Field-Robustness-of-Citation-Intent-with-Large-Language-Model
 
-This repository accompanies the paper titled **“LLM-Based Citation Intent Analytics: Longitudinal Evidence across 21 Scientific Fields”** and provides the resources
+This repository accompanies the paper titled **“MDCite: A Large-Scale Multi disciplinary Citation Context Dataset”** and provides the resources
 necessary to reproduce the experimental results reported in the study.
 
 The datasets used in the experiments are archived separately on Zenodo to ensure long-term
