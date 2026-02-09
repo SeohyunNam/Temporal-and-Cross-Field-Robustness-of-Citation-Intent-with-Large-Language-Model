@@ -4,11 +4,11 @@
 MDCite is a large-scale, multi-disciplinary citation context dataset designed to support research in citation-aware scholarly information retrieval (IR).  
 The dataset treats citation contexts local textual spans surrounding in-text citations as the primary unit of retrieval and analysis, enabling fine-grained evaluation of intent-aware retrieval, ranking, and candidate generation methods.
 
-This repository accompanies the **SIGIR 2026 Resource Paper** introducing MDCite and provides all artifacts required to reproduce the dataset and its construction pipeline.
+This repository accompanies the **SIGIR 2026 Resource Paper** introducing MDCite and provides all artifacts required to reproduce the dataset construction pipeline and baseline retrieval experiments.
 
 ---
 
-##  Overview
+## Overview
 
 - **Citation contexts:** 2,057,196  
 - **Citing papers:** ~100,000  
@@ -21,17 +21,31 @@ MDCite is designed as a **realistic IR test collection**, preserving the scale, 
 
 ---
 
-##  Data Sources
+## Code Structure
+
+.
+├── Data_Construction/
+│   ├── batch_paper_title_multi.py
+│   └── collect_by_journal.py
+│
+├── Evaluation/
+│   └── MDCite_SciCite_eval.ipynb
+│
+└── README.md
+
+
+---
+
+## Data Sources
 
 MDCite is constructed by integrating multiple large-scale scholarly data sources:
 
 ### Scopus bibliographic records (2000–2024)
-Bibliographic metadata are collected via the **Scopus API**, providing access to journal articles, citation counts, and rich publication metadata.  
-These records are used to identify influential papers based on citation statistics and support reproducible large-scale data collection over a long temporal span.
+Bibliographic metadata are collected via the **Scopus API** (using `pybliometrics`), providing access to journal articles, citation counts, and rich publication metadata.  
+These records form the foundation of the dataset and are used to identify influential papers based on citation statistics.
 
 ### Web of Science (WoS) 2024 Subject Categories
-WoS 2024 subject categories are used to group journals by scientific field and select **Top-5 Q1 journals per field**.  
-This field-aware normalization controls for substantial differences in citation practices across disciplines.
+WoS subject categories are used to group journals by scientific field and to select **Top-5 Q1 journals per field**, enabling journal-stratified and field-aware normalization.
 
 ### OpenAlex API
 The **OpenAlex API** is used to extract citation links and reference-linked citation context spans from full-text scholarly works that cite the selected influential papers.  
@@ -39,13 +53,13 @@ This enables large-scale extraction of citation contexts suitable for retrieval 
 
 ---
 
-##  Dataset Construction Pipeline
+## Dataset Construction Pipeline
 
 The MDCite dataset is built through a transparent and reproducible pipeline:
 
 1. **Journal selection**
    - Journals grouped by WoS subject categories  
-   - Top-5 Q1 journals selected per field  
+   - Top-5 Q1 journals selected per scientific field  
 
 2. **Citation-based filtering**
    - Top 5% most-cited papers identified independently within each journal  
@@ -65,37 +79,47 @@ The MDCite dataset is built through a transparent and reproducible pipeline:
 
 ---
 
-##  File Structure
+## Code Description
 
-### Core Dataset Files
+### Data Construction (`Data_Construction/`)
 
-- **`dataset_context_intent_single.csv`** (1.45 GB)  
-  Single-intent benchmark version in CSV format  
-  - One row = one citation context  
-  - Broad compatibility with IR toolchains  
+#### `collect_by_journal.py`
+- Uses the **Scopus API** to collect journal-level bibliographic metadata.
+- Implements:
+  - Article collection per journal  
+  - Citation count retrieval  
+  - Journal-stratified Top-5% cited paper selection  
+- Produces intermediate artifacts used for identifying influential papers.
 
-- **`dataset_context_intent_single.parquet`** (620 MB)  
-  Same content in Parquet format  
-  - Recommended for large-scale indexing and retrieval  
+#### `batch_paper_title_multi.py`
+- Uses the **OpenAlex API** to batch-collect citing papers and citation-related metadata.
+- Extracts citation links and citation context spans at scale.
+- Designed for efficient large-scale querying over millions of records.
 
-- **`citation_context_intent_data.zip`** (2.29 GB)  
-  Full citation context and multi-intent data  
-  - Includes intermediate construction artifacts  
-
-### Construction & Provenance Files
-
-- **`Scopus_(Year_2000–2024).zip`** (120 MB)  
-  Bibliographic metadata collected via Scopus API  
-
-- **`WOS_2024_Subject_categories_(Top-5_Q1_Journals_per_field)_data.zip`** (51 MB)  
-  Journal lists grouped by scientific field  
-
-- **`Top_5%_cited_papers_per_journal_dataset.zip`** (8.05 MB)  
-  Lists of Top-5% cited papers selected per journal  
+Together, these scripts implement the **dataset construction pipeline** described in the SIGIR 2026 paper.
 
 ---
 
-##  Dataset Schema
+### Evaluation (`Evaluation/`)
+
+#### `MDCite_SciCite_eval.ipynb`
+- Implements **BM25-based citation context retrieval**.
+- Evaluates retrieval performance on:
+  - **MDCite (single-intent variant)**  
+  - **SciCite** (for comparison)
+- Reports standard IR metrics:
+  - **nDCG@10**
+  - **Recall@k** (e.g., Recall@100, Recall@1000)
+- Supports:
+  - Intent-wise evaluation  
+  - Dataset-level comparison  
+  - Deep-retrieval analysis under large relevance sets  
+
+This code demonstrates that MDCite naturally supports candidate generation and deep-retrieval evaluation, where recall improves only at larger cutoffs due to large and distributed relevance sets.
+
+---
+
+## Dataset Schema
 
 Each citation context instance contains the following fields:
 
@@ -111,17 +135,11 @@ Each citation context instance contains the following fields:
 | `year` | Publication year |
 | `source_file` | Provenance identifier |
 
-The `group_id` field enables **document-aware evaluation** and prevents information leakage in retrieval experiments.
+The `group_id` field enables document-aware evaluation and prevents information leakage in retrieval experiments.
 
 ---
 
-##  Intent Distribution
-
-MDCite contains seven citation intent classes and exhibits a highly imbalanced distribution, reflecting real-world citation behavior rather than artificially balanced labels.
-
----
-
-##  Intended Use Cases
+## Intended Use Cases
 
 MDCite supports a wide range of research scenarios, including:
 
@@ -131,20 +149,22 @@ MDCite supports a wide range of research scenarios, including:
 - Large-scale citation intent classification  
 - Scholarly search and citation analysis  
 
-Baseline BM25 experiments demonstrate that MDCite naturally supports deep-retrieval evaluation, where recall improves only at larger cutoffs due to large and distributed relevance sets.
+Baseline BM25 experiments show that MDCite naturally supports deep-retrieval evaluation, where recall improves only at larger cutoffs.
 
 ---
 
-##  Reproducibility 
+## Reproducibility
 
-All files are released for research and educational use.  
-MDCite is designed to support end-to-end reproducible experimentation, with clear provenance, intermediate artifacts, and document-level identifiers to avoid information leakage.
+All scripts, intermediate artifacts, and processed datasets are released to support end-to-end reproducible research.  
+Document-level identifiers and clearly separated construction and evaluation code help avoid information leakage and ensure consistent experimental setups.
 
 ---
 
-##  Data Availability
+## Data Availability
 
 The processed citation context and intent datasets used in this study are
 publicly available via Zenodo at https://doi.org/10.5281/zenodo.18410050.
 
 ---
+
+
