@@ -23,7 +23,7 @@ MDCite is designed as a **realistic IR test collection**, preserving the scale, 
 
 ## Code Structure
 
-.
+```
 ├── Data_Construction/
 │   ├── batch_paper_title_multi.py
 │   └── collect_by_journal.py
@@ -32,7 +32,7 @@ MDCite is designed as a **realistic IR test collection**, preserving the scale, 
 │   └── MDCite_SciCite_eval.ipynb
 │
 └── README.md
-
+```
 
 ---
 
@@ -81,7 +81,7 @@ The MDCite dataset is built through a transparent and reproducible pipeline:
 
 ## Code Description
 
-### Data Construction (`Code_Dataset Construction/`)
+### Data Construction (`Code/Dataset Construction/`)
 
 #### `collect_by_journal.py`
 - Uses the **Scopus API** to collect journal-level bibliographic metadata.
@@ -100,7 +100,7 @@ Together, these scripts implement the **dataset construction pipeline** describe
 
 ---
 
-### Evaluation (`Code_Evaluation/`)
+### Evaluation (`Code/Evaluation/`)
 
 #### `MDCite_SciCite_eval.ipynb`
 - Implements **BM25-based citation context retrieval**.
