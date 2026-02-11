@@ -1,5 +1,5 @@
 # MDCite  
-**A Large-Scale Multi-Disciplinary Citation Context and Intent Dataset**
+**A Large-Scale Multi-Disciplinary Citation Context Dataset**
 
 MDCite is a large-scale, multi-disciplinary citation context dataset designed to support research in citation-aware scholarly information retrieval (IR).  
 The dataset treats citation contexts local textual spans surrounding in-text citations as the primary unit of retrieval and analysis, enabling fine-grained evaluation of intent-aware retrieval, ranking, and candidate generation methods.
