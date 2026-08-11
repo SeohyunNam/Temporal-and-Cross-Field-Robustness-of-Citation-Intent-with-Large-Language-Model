@@ -276,5 +276,28 @@ complementary repositories:
 
 ## Data Availability
 
-- **Original MDContextCite database (Zenodo):**  https://zenodo.org/records/18536895
-- **IDCite processed dataset and graph database (Hugging Face):**  https://huggingface.co/datasets/Daniel0315/IDCite
+The IDCite dataset is publicly available through Zenodo and Hugging Face.
+
+- **Official archived release (Zenodo, Version 3):**  
+  **IDCite: A Large-Scale Multidisciplinary Citation Intent Dataset for Scholarly Knowledge Discovery**  
+  DOI: [10.5281/zenodo.20796923](https://doi.org/10.5281/zenodo.20796923)
+
+- **IDCite processed dataset and graph database (Hugging Face):**  
+  [https://huggingface.co/datasets/Daniel0315/IDCite](https://huggingface.co/datasets/Daniel0315/IDCite)
+
+### Dataset Documentation
+
+For detailed information on the dataset design, release lineage, data sources, construction pipeline, schema definitions, multidisciplinary sampling strategy, citation-intent annotation, normalized scholarly entities, knowledge graph representation, technical validation, reproducibility, and responsible use, please refer to:
+
+**`IDCite_Project_and_Dataset_Documentation_Seohyun_Nam.pdf`**
+
+The documentation is included in the official Zenodo Version 3 release and serves as the primary reference for understanding the structure, scope, provenance, and recommended use of IDCite.
+
+### Previous Releases
+
+IDCite builds upon the scholarly citation resources previously released through this Zenodo record. Earlier versions, including **MDCite** and the **MDContextCite/EdgeCite** release, remain accessible through the Zenodo version history for provenance and reproducibility.
+
+- **Concept DOI (all versions):** [10.5281/zenodo.18410049](https://doi.org/10.5281/zenodo.18410049)
+- **Version 1 — MDCite:** [10.5281/zenodo.18410050](https://doi.org/10.5281/zenodo.18410050)
+- **Version 2 — MDContextCite / EdgeCite:** [10.5281/zenodo.18536895](https://doi.org/10.5281/zenodo.18536895)
+- **Version 3 — IDCite:** [10.5281/zenodo.20796923](https://doi.org/10.5281/zenodo.20796923)
