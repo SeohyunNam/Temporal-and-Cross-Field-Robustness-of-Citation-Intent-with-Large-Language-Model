@@ -35,7 +35,7 @@ flowchart TD
         A1 --> A2 --> A3 --> A4 --> A5 --> A6
     end
 
-    CTX[["Citation context and<br/>intent data<br/>citing_contexts.json"]]
+    CTX[["Citation context and<br/>intent data<br/>*citing_contexts.json"]]
     A6 --> CTX
 
     subgraph P2["2 · MDCite"]
