@@ -1,24 +1,22 @@
 """Technical validation for the IDCite resource.
 
-This script reproduces the technical-validation analyses reported in the
-IDCite Scientific Data paper (Section 3). Given the ontology-ready
-Parquet tables produced by ``ontology.py``, it computes:
+This script reproduces the technical-validation analyses for the IDCite
+resource. Given the ontology-ready Parquet tables produced by
+``ontology.py``, it computes:
 
     1. Metadata completeness for the citation-event, citing-paper, and
-       seed-paper tables (Section 3.1, Table 8).
+       seed-paper tables.
     2. Citation-event referential integrity against the seed and citing
-       paper tables (Section 3.3).
+       paper tables.
     3. The canonical citation-intent distribution, obtained by decomposing
-       composite intent labels into their constituent intents
-       (Section 2.5 / Table 4 / Fig. 3), together with an intent-coverage
-       summary (Section 3.2).
+       composite intent labels into their constituent intents, together
+       with an intent-coverage summary.
     4. Knowledge-graph integrity statistics: node/edge counts, duplicate
-       node identifiers, and source/target referential integrity
-       (Section 3.3, Table 9).
+       node identifiers, and source/target referential integrity.
     5. Entity-table uniqueness checks for the normalized lookup tables.
 
 All result tables are written as CSV files and bundled into a single ZIP
-archive. An optional citation-intent figure (Fig. 3) can be produced with
+archive. An optional citation-intent figure can be produced with
 ``--make-figures``.
 
 Usage

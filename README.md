@@ -30,19 +30,38 @@ physical sciences, social sciences, humanities, and multidisciplinary domains.
 
 ```
 code/
-├── Data Collection/
+├── 1_Data_Collection_Preprocessing/   # raw → Citation context & intent data
 │   ├── collect_by_journal.py
+│   ├── build_field_journal_mapping.py
+│   ├── extract_journal_full_datasets.py
+│   ├── select_top5pct_per_journal.py
 │   ├── paper_title.py
 │   └── batch_paper_title_multi.py
-│
-├── IDCite Construction/
+├── 2_MDCite_Construction/             # → dataset_context_intent_single
+│   └── build_mdcite.py
+├── 3_EdgeCite_Construction/           # → retrieval_dataset_citing_disjoint_with_year
+│   └── build_edgecite.py
+├── 4_IDCite_Construction/             # → 17 IDCite Parquet tables
 │   └── ontology.py
-│
-└── Technical Validation/
-    └── idcite_technical_validation.py
+├── Technical Validation/
+│   └── idcite_technical_validation.py
+└── requirements.txt
 
 README.md
 ```
+
+### Construction pipelines
+
+The code is organized into four self-contained construction pipelines that
+reproduce the successive Zenodo releases from the raw inputs. Each folder has
+its own README.
+
+| # | Pipeline | Input → Output | Key script |
+| --- | --- | --- | --- |
+| 1 | Data Collection & Preprocessing | Scopus records → **Citation context & intent data** | `batch_paper_title_multi.py` |
+| 2 | MDCite Construction | Citation context & intent data → **`dataset_context_intent_single`** | `build_mdcite.py` |
+| 3 | EdgeCite Construction | Citation contexts + top-5% anchors → **`retrieval_dataset_citing_disjoint_with_year`** | `build_edgecite.py` |
+| 4 | IDCite Construction | Seed papers + citation contexts → **17 IDCite Parquet tables** | `ontology.py` |
 
 ---
 
@@ -109,50 +128,61 @@ IDCite is built through a transparent and reproducible pipeline:
 
 ## Code Description
 
-### Data Collection (`code/Data Collection/`)
+### 1 · Data Collection & Preprocessing (`code/1_Data_Collection_Preprocessing/`)
 
-#### `collect_by_journal.py`
-- Uses the **Scopus API** to collect journal-level bibliographic metadata.
-- Implements article collection per journal, citation-count retrieval, and
-  journal-stratified Top-5% cited paper selection.
-- Produces intermediate artifacts used to identify influential seed papers.
+Produces the **Citation context & intent data** from raw Scopus records.
+See the [folder README](code/1_Data_Collection_Preprocessing/README.md).
 
-#### `paper_title.py`
-- Core citation context extraction engine.
-- Resolves DOIs (via OpenAlex if necessary) and retrieves citation links via
-  the **OpenAlex API**.
-- Retrieves citation context spans and intent signals via the
-  **Semantic Scholar Graph API**.
-- Outputs structured citation context records.
+- `collect_by_journal.py` — collects journal-level bibliographic metadata via
+  the **Scopus API** (per journal / year range).
+- `build_field_journal_mapping.py` — matches journals to WoS field/category
+  groups and builds a merged field/journal table.
+- `extract_journal_full_datasets.py` — splits the merged table into
+  per-journal full datasets.
+- `select_top5pct_per_journal.py` — journal-stratified Top-5% seed-paper
+  selection.
+- `paper_title.py` — citation-context extraction engine (**OpenAlex** citation
+  links + **Semantic Scholar Graph API** contexts).
+- `batch_paper_title_multi.py` — batch driver producing
+  `output_<field>/<doi>/citing_contexts.json`.
 
-#### `batch_paper_title_multi.py`
-- Batch execution wrapper for `paper_title.py`.
-- Iterates over lists of influential papers for large-scale context extraction
-  across multiple journal groups.
+Citation **intents** are assigned by running the SynIntent model
+(Phan et al., IP&M 2026) over the retrieved contexts; that external model is
+not redistributed here (see the folder README).
 
-### IDCite Construction (`code/IDCite Construction/`)
+### 2 · MDCite Construction (`code/2_MDCite_Construction/`)
 
-#### `ontology.py`
-- Builds the ontology-ready IDCite resource from the raw seed-paper and
-  citing-context archives.
-- Generates citation-event records, citing-paper and seed-paper tables,
-  enriched citation events, and normalized entity lookup tables
-  (authors, affiliations, journals, cities, countries, fields, intents).
-- Constructs the ontology-ready knowledge graph (`kg_nodes.parquet`,
-  `kg_edges.parquet`) with typed nodes and edges.
-- Run with:
+- `build_mdcite.py` — parses the citation contexts into the MDCite schema and
+  keeps single (non-composite) intents, producing
+  `dataset_context_intent_single.{parquet,csv}` (plus the multi-intent
+  provenance table). See the [folder README](code/2_MDCite_Construction/README.md).
+
+### 3 · EdgeCite Construction (`code/3_EdgeCite_Construction/`)
+
+- `build_edgecite.py` — reorganizes the citation contexts into a
+  citation-event retrieval benchmark with normalized cited anchors,
+  title-based candidates, a citing-disjoint train/validation/test split, and
+  year metadata, producing
+  `retrieval_dataset_citing_disjoint_with_year.parquet`. See the
+  [folder README](code/3_EdgeCite_Construction/README.md).
+
+### 4 · IDCite Construction (`code/4_IDCite_Construction/`)
+
+- `ontology.py` — builds the ontology-ready IDCite resource: citation-event
+  records, citing-/seed-paper tables, normalized entity lookup tables, and the
+  supplementary knowledge graph (`kg_nodes.parquet`, `kg_edges.parquet`).
+  See the [folder README](code/4_IDCite_Construction/README.md).
   ```bash
-  python "code/IDCite Construction/ontology.py" --base-dir /path/to/wos_data
+  python "code/4_IDCite_Construction/ontology.py" --base-dir /path/to/wos_data
   ```
-- Outputs are written to `<base-dir>/citationhub_v1_ontology_ready/`.
+  Outputs are written to `<base-dir>/citationhub_v1_ontology_ready/`.
 
 ### Technical Validation (`code/Technical Validation/`)
 
 #### `idcite_technical_validation.py`
-- Reproduces the technical-validation analyses reported in the paper:
-  metadata completeness, citation-event referential integrity, citation-intent
-  distribution and coverage, knowledge-graph integrity, and entity-table
-  uniqueness.
+- Reproduces the technical-validation analyses: metadata completeness,
+  citation-event referential integrity, citation-intent distribution and
+  coverage, knowledge-graph integrity, and entity-table uniqueness.
 - Writes per-check CSV tables and a bundled ZIP of all validation results.
 - Run with:
   ```bash

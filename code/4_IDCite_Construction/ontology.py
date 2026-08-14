@@ -10,8 +10,7 @@ inputs collected during dataset construction:
        ``citing_contexts.json`` files organized by ESI field folder and by a
        per-seed-paper DOI bundle directory.
 
-It produces the released Parquet tables described in the IDCite
-Scientific Data paper (Methods 2.4-2.9):
+It produces the released IDCite Parquet tables:
 
     seed_cited_papers.parquet           seed (cited) paper metadata
     citation_events.parquet             citation-event records
