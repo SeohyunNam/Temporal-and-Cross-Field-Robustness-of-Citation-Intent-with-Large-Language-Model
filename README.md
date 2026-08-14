@@ -39,7 +39,7 @@ flowchart TD
     A6 --> CTX
 
     subgraph P2["2 · MDCite"]
-        B1["build_mdcite.py"] --> B2[["dataset_context_<br/>intent_single<br/>— 1,857,503 records"]]
+        B1["build_mdcite.py"] --> B2[["dataset_context_<br/>intent_single<br/>"]]
     end
     subgraph P3["3 · EdgeCite"]
         C1["build_edgecite.py"] --> C2[["retrieval_dataset<br/>citing_disjoint_<br/>with_year"]]
