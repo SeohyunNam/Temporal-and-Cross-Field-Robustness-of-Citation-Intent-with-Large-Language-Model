@@ -39,10 +39,10 @@ flowchart TD
     A6 --> CTX
 
     subgraph P2["2 · MDCite"]
-        B1["build_mdcite.py"] --> B2[["dataset_context_<br/>intent_single<br/>"]]
+        B1["build_mdcite.py"] --> B2[["dataset_context_<br/>intent_single.parquet<br/>"]]
     end
     subgraph P3["3 · EdgeCite"]
-        C1["build_edgecite.py"] --> C2[["retrieval_dataset<br/>citing_disjoint_<br/>with_year"]]
+        C1["build_edgecite.py"] --> C2[["retrieval_dataset<br/>citing_disjoint_<br/>with_year.parquet"]]
     end
     subgraph P4["4 · IDCite"]
         D1["ontology.py"] --> D2[["17 Parquet tables<br/>KG: 3.4M nodes<br/>6.9M edges"]]
