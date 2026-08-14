@@ -15,7 +15,7 @@ From raw scholarly sources, a single preprocessing pipeline produces the shared
 the **MDCite**, **EdgeCite**, and **IDCite** releases.
 
 ```mermaid
-%%{init: {"flowchart": {"htmlLabels": true, "padding": 18, "nodeSpacing": 55, "rankSpacing": 65}}}%%
+%%{init: {"flowchart": {"padding": 16, "nodeSpacing": 55, "rankSpacing": 70}}}%%
 flowchart TD
     subgraph SRC["Data Sources"]
         direction LR
@@ -26,29 +26,29 @@ flowchart TD
     end
 
     subgraph P1["1 · Data Collection and Preprocessing"]
-        A1["collect_by_journal.py"]
-        A2["build_field_journal_mapping.py"]
-        A3["extract_journal_full_datasets.py"]
-        A4["select_top5pct_per_journal.py<br/>23,479 seed papers"]
-        A5["paper_title.py<br/>batch_paper_title_multi.py"]
-        A6{{"SynIntent GNN<br/>intent classifier (external)"}}
+        A1["collect_by_<br/>journal.py"]
+        A2["build_field_journal_<br/>mapping.py"]
+        A3["extract_journal_full_<br/>datasets.py"]
+        A4["select_top5pct_per_<br/>journal.py<br/>— 23,479 seed papers"]
+        A5["paper_title.py<br/>batch_paper_title_<br/>multi.py"]
+        A6{{"SynIntent GNN<br/>intent classifier<br/>(external)"}}
         A1 --> A2 --> A3 --> A4 --> A5 --> A6
     end
 
-    CTX[["Citation context and intent data<br/>citing_contexts.json"]]
+    CTX[["Citation context and<br/>intent data<br/>citing_contexts.json"]]
     A6 --> CTX
 
     subgraph P2["2 · MDCite"]
-        B1["build_mdcite.py"] --> B2[["dataset_context_intent_single<br/>1,857,503 records"]]
+        B1["build_mdcite.py"] --> B2[["dataset_context_<br/>intent_single<br/>— 1,857,503 records"]]
     end
     subgraph P3["3 · EdgeCite"]
-        C1["build_edgecite.py"] --> C2[["retrieval_dataset<br/>citing_disjoint_with_year"]]
+        C1["build_edgecite.py"] --> C2[["retrieval_dataset<br/>citing_disjoint_<br/>with_year"]]
     end
     subgraph P4["4 · IDCite"]
-        D1["ontology.py"] --> D2[["17 Parquet tables<br/>KG: 3.4M nodes / 6.9M edges"]]
+        D1["ontology.py"] --> D2[["17 Parquet tables<br/>KG: 3.4M nodes<br/>6.9M edges"]]
     end
 
-    VAL["Technical Validation<br/>idcite_technical_validation.py"]
+    VAL["Technical Validation<br/>idcite_technical_<br/>validation.py"]
 
     S1 --> A1
     S2 --> A2
