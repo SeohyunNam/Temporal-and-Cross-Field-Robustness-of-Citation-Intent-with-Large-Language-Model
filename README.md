@@ -8,11 +8,11 @@ This repository contains the complete pipeline for metadata collection, citation
 
 ---
 
-## Pipeline at a Glance
+## Dataset Construction Pipeline 
 
 From raw scholarly sources, a single preprocessing pipeline produces the shared
 **Citation context & intent data**, which three downstream pipelines turn into
-the **MDCite**, **EdgeCite**, and **IDCite** releases.
+the **MDCite(v1)**, **EdgeCite(v2)**, and **IDCite(v3)** releases.
 
 ```mermaid
 %%{init: {"flowchart": {"padding": 16, "nodeSpacing": 55, "rankSpacing": 70}}}%%
