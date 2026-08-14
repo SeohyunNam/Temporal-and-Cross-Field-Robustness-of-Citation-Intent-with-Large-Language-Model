@@ -8,6 +8,68 @@ This repository contains the complete pipeline for metadata collection, citation
 
 ---
 
+## Pipeline at a Glance
+
+From raw scholarly sources, a single preprocessing pipeline produces the shared
+**Citation context & intent data**, which three downstream pipelines turn into
+the **MDCite**, **EdgeCite**, and **IDCite** releases.
+
+```mermaid
+flowchart TD
+    subgraph SRC["Data Sources"]
+        direction LR
+        S1["Scopus API<br/>pybliometrics"]
+        S2["WoS / JCR 2024<br/>Q1 categories"]
+        S3["OpenAlex API<br/>citation links"]
+        S4["Semantic Scholar<br/>Graph API"]
+    end
+
+    subgraph P1["1 · Data Collection and Preprocessing"]
+        A1["collect_by_journal.py"]
+        A2["build_field_journal_mapping.py"]
+        A3["extract_journal_full_datasets.py"]
+        A4["select_top5pct_per_journal.py<br/>23,479 seed papers"]
+        A5["paper_title.py<br/>batch_paper_title_multi.py"]
+        A6{{"SynIntent GNN<br/>intent classifier (external)"}}
+        A1 --> A2 --> A3 --> A4 --> A5 --> A6
+    end
+
+    CTX[["Citation context and intent data<br/>citing_contexts.json"]]
+    A6 --> CTX
+
+    subgraph P2["2 · MDCite"]
+        B1["build_mdcite.py"] --> B2[["dataset_context_intent_single<br/>1,857,503 records"]]
+    end
+    subgraph P3["3 · EdgeCite"]
+        C1["build_edgecite.py"] --> C2[["retrieval_dataset<br/>citing_disjoint_with_year"]]
+    end
+    subgraph P4["4 · IDCite"]
+        D1["ontology.py"] --> D2[["17 Parquet tables<br/>KG: 3.4M nodes / 6.9M edges"]]
+    end
+
+    VAL["Technical Validation<br/>idcite_technical_validation.py"]
+
+    S1 --> A1
+    S2 --> A2
+    S3 --> A5
+    S4 --> A5
+    CTX --> B1
+    CTX --> C1
+    CTX --> D1
+    A4 -. "top-5% anchors" .-> C1
+    A4 -. "seed papers" .-> D1
+    D2 --> VAL
+
+    classDef src fill:#eaf2ff,stroke:#4a76c4,color:#12305e;
+    classDef out fill:#e6f7ec,stroke:#3a9d5d,color:#134a2c;
+    classDef ctx fill:#fff3e0,stroke:#d18b28,color:#5c3b0c;
+    class S1,S2,S3,S4 src;
+    class B2,C2,D2 out;
+    class CTX ctx;
+```
+
+---
+
 ## Overview
 
 - **Citation events:** 1,857,503
