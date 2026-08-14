@@ -15,6 +15,7 @@ From raw scholarly sources, a single preprocessing pipeline produces the shared
 the **MDCite**, **EdgeCite**, and **IDCite** releases.
 
 ```mermaid
+%%{init: {"flowchart": {"htmlLabels": true, "padding": 18, "nodeSpacing": 55, "rankSpacing": 65}}}%%
 flowchart TD
     subgraph SRC["Data Sources"]
         direction LR
