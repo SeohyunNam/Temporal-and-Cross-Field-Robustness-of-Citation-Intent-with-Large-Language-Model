@@ -28,6 +28,10 @@ Citation context extraction                  batch_paper_title_multi.py
 Citation context & intent data               output_<field>/<doi>/citing_contexts.json
 ```
 
+The WoS / JCR group definition used for the mapping step is included as
+[`wos_groups.txt`](wos_groups.txt) (2024 Q1, top-5 journals per field). It is
+read in fixed 7-line blocks — group, WoS category, then five journal names.
+
 ## Scripts
 
 | Script | Role | Main output |
