@@ -61,13 +61,20 @@ _DOI_PREFIXES = (
 )
 
 _NOISE = re.compile(
-    r"(all rights reserved|copyright|©|\bfigure\b|\btable\b|supplementary|"
+    r"(?:all rights reserved|copyright|©|\bfigure\b|\btable\b|supplementary|"
     r"publisher's note|creative commons|license|doi:|covid-19 resource centre|"
     r"elsevier hereby grants permission|informed consent statement)",
     re.IGNORECASE,
 )
 _BRACKETS_ONLY = re.compile(r"^\s*\[\d+\]\.\s*$")
 _DIGITS_PUNCT = re.compile(r"^[\d\W_]+$")
+_COLOUR_FIG = re.compile(
+    r"(?:figures? (?:in|may appear in) colour|"
+    r"colour only in the (?:electronic|online) version)",
+    re.IGNORECASE,
+)
+_GLOSSARY = re.compile(r"(?:\bxii\b|\bxiii\b)", re.IGNORECASE)
+_ACRONYM = re.compile(r"\b[A-Z]{2,}\b")
 
 
 def norm_doi(x) -> Optional[str]:
@@ -170,19 +177,30 @@ def build_edges(context_zip, context_dir):
             if yr is not None:
                 year_rows.append((citing_doi, yr))
 
-            primary = parse_primary_label(r.get("intents"))
-            context = normalize_context(r.get("contexts"))
-            if primary is None or context is None:
+            intents = r.get("intents")
+            contexts = r.get("contexts")
+            # One citation record carries paired intent/context lists (one
+            # intent per in-text citation context). Expand to one edge per
+            # (intent, context) pair, matching the original EdgeCite build.
+            if not isinstance(intents, list) or not isinstance(contexts, list):
                 continue
-            edges.append(
-                {
-                    "citing_doi": citing_doi,
-                    "cited_doi_norm": cited_doi,
-                    "field": field,
-                    "context": context,
-                    "primary_label": primary,
-                }
-            )
+            if len(intents) == 0 or len(intents) != len(contexts):
+                continue
+
+            for it, cx in zip(intents, contexts):
+                primary = parse_primary_label(it)
+                context = cx.strip() if isinstance(cx, str) else normalize_context(cx)
+                if primary is None or not context:
+                    continue
+                edges.append(
+                    {
+                        "citing_doi": citing_doi,
+                        "cited_doi_norm": cited_doi,
+                        "field": field,
+                        "context": context,
+                        "primary_label": primary,
+                    }
+                )
 
     df = pd.DataFrame(edges)
     year_map = (
@@ -206,6 +224,9 @@ def clean_edges(df: pd.DataFrame, min_chars: int = 20) -> pd.DataFrame:
         | ctx.str.match(_BRACKETS_ONLY)
         | ctx.str.match(_DIGITS_PUNCT)
         | ctx.str.contains(_NOISE)
+        | ctx.str.contains(_COLOUR_FIG)
+        | ctx.str.contains(_GLOSSARY)
+        | (ctx.str.count(_ACRONYM) >= 25)  # glossary/abbreviation dumps
     )
     return df[~mask_noise].copy()
 
