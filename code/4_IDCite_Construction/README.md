@@ -44,5 +44,5 @@ python ontology.py --base-dir /path/to/wos_data
 ```
 
 Technical validation of these tables is provided separately in
-[`../Technical Validation/`](../Technical%20Validation/). Dependencies: see
+[`../Technical_Validation/`](../Technical_Validation/). Dependencies: see
 [`../requirements.txt`](../requirements.txt).

@@ -48,7 +48,7 @@ flowchart TD
         D1["ontology.py"] --> D2[["17 Parquet tables<br/>KG: 3.4M nodes<br/>6.9M edges"]]
     end
 
-    VAL["Technical Validation<br/>idcite_technical_<br/>validation.py"]
+    VAL["Technical_Validation<br/>idcite_technical_<br/>validation.py"]
 
     S1 --> A1
     S2 --> A2
@@ -106,7 +106,8 @@ code/
 │   └── build_edgecite.py
 ├── 4_IDCite_Construction/             # → 17 IDCite Parquet tables
 │   └── ontology.py
-├── Technical Validation/
+├── Technical_Validation/
+│   ├── human_evaluation.py
 │   └── idcite_technical_validation.py
 └── requirements.txt
 
@@ -240,7 +241,20 @@ not redistributed here (see the folder README).
   ```
   Outputs are written to `<base-dir>/citationhub_v1_ontology_ready/`.
 
-### Technical Validation (`code/Technical Validation/`)
+### Technical Validation (`code/Technical_Validation/`)
+
+#### `human_evaluation.py`
+- Reproduces the **intent annotation validation**: expert human labels are
+  compared with the automatically assigned citation intents.
+- Reads `human_evaluation_Tuan_Anh_Phan.zip` from the Zenodo Version 3
+  release (21 disciplines × 7 canonical intents = 147 CSV files).
+- Reports strict and weak agreement, micro/macro precision–recall–F1, and
+  per-intent scores.
+- Run with:
+  ```bash
+  python "code/Technical_Validation/human_evaluation.py" \
+      --zip-path /path/to/human_evaluation_Tuan_Anh_Phan.zip
+  ```
 
 #### `idcite_technical_validation.py`
 - Reproduces the technical-validation analyses: metadata completeness,
@@ -249,7 +263,7 @@ not redistributed here (see the folder README).
 - Writes per-check CSV tables and a bundled ZIP of all validation results.
 - Run with:
   ```bash
-  python "code/Technical Validation/idcite_technical_validation.py" \
+  python "code/Technical_Validation/idcite_technical_validation.py" \
       --data-dir /path/to/wos_data/citationhub_v1_ontology_ready --make-figures
   ```
 
